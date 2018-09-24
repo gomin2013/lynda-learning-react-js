@@ -302,3 +302,55 @@ index.html
 </body>
 </html>
 ```
+
+### UsingState
+
+js/checkbox.js
+```javascript
+var Checkbox = React.createClass({
+  getInitialState: function () {
+    return {checked: true}
+  },
+  handleCheck: function () {
+    this.setState({checked: !this.state.checked})
+  },
+  render: function () {
+    var msg = this.state.checked ? "checked" : "unchecked";
+    return (
+      <div>
+        <input type="checkbox" onChange={this.handleCheck} defaultChecked={this.state.checked} />
+        <p>This box is {msg}.</p>
+      </div>
+    );
+  }
+});
+React.render(<Checkbox />, document.body);
+```
+
+index.html
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- jQuery, jQuery.ui -->
+  <link href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css" rel="stylesheet" type="text/css" />
+  <script src="https://code.jquery.com/jquery.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+
+  <!-- Bootstrap -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+  <!-- React -->
+  <script src="https://fb.me/react-0.14.3.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!--Custom Styles -->
+  <link href="css/style.css" rel="stylesheet" type="text/css" />
+  <title>React Bulletin Board</title>
+</head>
+<body>
+<script src="js/checkbox.js" type="text/babel"></script>
+</body>
+</html>
+```
