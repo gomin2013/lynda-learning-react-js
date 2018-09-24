@@ -84,3 +84,43 @@ index.html
 </body>
 </html>
 ```
+
+### Babel on NodeJS
+
+**Setting up NodeJS**
+
+install NodeJS
+```
+sudo yum -y install nodejs
+```
+
+install NodeJS (macOS)
+```
+brew install node
+```
+
+Node JS Version
+```
+node -v
+▶ v6.14.3
+```
+**Setting up Babel**
+
+Install Babel CLI
+```
+sudo npm install babel-cli -g
+npm list -g --depth=0
+```
+
+.babelrc
+```
+{
+  'presets': ['latest', 'react', 'stage-0']
+}
+```
+
+Install Babel preset
+```
+npm install babel-preset-latest babel-preset-react babel-preset-stage-0 --save-dev
+npm list --depth=0
+```
