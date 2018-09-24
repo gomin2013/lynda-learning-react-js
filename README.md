@@ -354,3 +354,74 @@ index.html
 </body>
 </html>
 ```
+
+### AddingState
+
+js/note.js
+```javascript
+var Note = React.createClass({
+  getInitialState: function() {
+    return {editing: false}
+  },
+  edit: function() {
+    this.setState({editing: true});
+  },
+  save: function() {
+    this.setState({editing: false});
+  },
+  remove: function() {
+    alert('removeing note');
+  },
+  renderDisplay: function() {
+    return (
+      <div className="note">
+        <p>{this.props.children}</p>
+        <span>
+          <button onClick={this.edit} className="btn btn-primary glyphicon glyphicon-pencil"/>
+          <button onClick={this.remove} className="btn btn-danger glyphicon glyphicon-trash"/>
+        </span>
+      </div>
+    );
+  },
+  renderForm: function() {
+    return (
+      <div className="note">
+        <textarea defaultValue={this.props.children} className="form-control"></textarea>
+        <button onClick={this.save} className="btn btn-success btn-sm glyphicon glyphicon-floppy-disk"/>
+      </div>
+    );
+  },
+  render: function() {
+    return this.state.editing ? this.renderForm() : this.renderDisplay();
+  }
+});
+React.render(<Note>Hello World</Note>, document.body);
+```
+
+index.html
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- jQuery, jQuery.ui -->
+  <link href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css" rel="stylesheet" type="text/css" />
+  <script src="https://code.jquery.com/jquery.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+
+  <!-- Bootstrap -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+  <!-- React -->
+  <script src="https://fb.me/react-0.14.3.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!--Custom Styles -->
+  <link href="css/style.css" rel="stylesheet" type="text/css" />
+  <title>React Bulletin Board</title>
+</head>
+<body>
+<script src="js/note.js" type="text/babel"></script>
+</body>
+</html>
+```
