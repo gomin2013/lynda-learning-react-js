@@ -20,13 +20,13 @@ Open React Developer Tools
 **Adding React JS Library**
 
 React 0.14.3 (production)
-```
+```html
 <script src="https://fb.me/react-0.14.3.min.js"></script>
 <script src="https://fb.me/react-dom-0.14.3.min.js"></script>
 ```
 
 index.html
-```
+```html
 <!DOCTYPE html>
 <html>
   <head>
@@ -59,7 +59,7 @@ https://unpkg.com/@babel/standalone/babel.min.js
 ```
 
 index.html
-```
+```html
 <!DOCTYPE html>
 <html>
 <head>
@@ -113,9 +113,9 @@ npm list -g --depth=0
 ```
 
 .babelrc
-```
+```json
 {
-  'presets': ['latest', 'react', 'stage-0']
+  "presets": ["latest", "react", "stage-0"]
 }
 ```
 
@@ -123,4 +123,67 @@ Install Babel preset
 ```
 npm install babel-preset-latest babel-preset-react babel-preset-stage-0 --save-dev
 npm list --depth=0
+```
+
+**Using Babel to compile JSX**
+
+src/helloworld.js
+```javascript
+var HelloWorld = React.createClass({
+  render: function() {
+    return <div>
+        <h1>Hello World</h1>
+        <p>This is some text</p>
+      </div>;
+  }
+});
+
+React.render(<HelloWorld />, document.body);
+```
+
+Compile Directories
+```
+babel src --out-dir build
+▶ src/helloworld.js -> build/helloworld.js
+```
+
+build/helloworld.js
+```javascript
+"use strict";
+
+var HelloWorld = React.createClass({
+  displayName: "HelloWorld",
+
+  render: function render() {
+    return React.createElement(
+      "div",
+      null,
+      React.createElement(
+        "h1",
+        null,
+        "Hello World"
+      ),
+      React.createElement(
+        "p",
+        null,
+        "This is some text"
+      )
+    );
+  }
+});
+
+React.render(React.createElement(HelloWorld, null), document.body);
+```
+index.html
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://fb.me/react-0.14.3.min.js"></script>
+  <title>My First React File</title>
+</head>
+<body>
+<script src="build/helloworld.js"></script>
+</body>
+</html>
 ```
