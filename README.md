@@ -216,3 +216,34 @@ index.html
 </body>
 </html>
 ```
+
+### UsingProps
+
+index.html
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://fb.me/react-0.14.3.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <title>My First React File</title>
+</head>
+<body>
+<script type="text/babel">
+  var MyComponent = React.createClass({
+    render: function () {
+      return <div>
+        <h1>{this.props.text}</h1>
+        <p>{this.props.children}</p>
+      </div>;
+    }
+  });
+  React.render(<div>
+    <MyComponent text="Hello World">This is a hello.</MyComponent>
+    <MyComponent text="How are You?">This is a how are you.</MyComponent>
+    <MyComponent text="Goodbye">This is a goodbye.</MyComponent>
+  </div>, document.body);
+</script>
+</body>
+</html>
+```
