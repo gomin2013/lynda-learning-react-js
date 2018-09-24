@@ -499,3 +499,53 @@ index.html
 </body>
 </html>
 ```
+
+### PropTypes
+
+js/note.js
+```javascript
+var Board = React.createClass({
+  propTypes: {
+    count: function(props, propName) {
+      if (typeof props[propName] !== "number") {
+        return new Error("The count property must be a number");
+      }
+      if (props[propName] > 100) {
+        return new Error("Creating " + props[propName] + " notes is ridiculous");
+      }
+    }
+  },
+  render: function() {
+    return <div className="board">{this.props.count}</div>
+  }
+});
+React.render(<Note>Hello World</Note>, document.body);
+```
+
+index.html
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- jQuery, jQuery.ui -->
+  <link href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css" rel="stylesheet" type="text/css" />
+  <script src="https://code.jquery.com/jquery.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+
+  <!-- Bootstrap -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+  <!-- React -->
+  <script src="https://fb.me/react-0.14.3.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!--Custom Styles -->
+  <link href="css/style.css" rel="stylesheet" type="text/css" />
+  <title>React Bulletin Board</title>
+</head>
+<body>
+<script src="js/note.js" type="text/babel"></script>
+</body>
+</html>
+```
