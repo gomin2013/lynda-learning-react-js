@@ -187,3 +187,32 @@ index.html
 </body>
 </html>
 ```
+
+## 03 React Components
+### Creating a React Component
+
+index.html
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://fb.me/react-0.14.3.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <title>My First React File</title>
+</head>
+<body>
+<script type="text/babel">
+  var MyComponent = React.createClass({
+    render: function () {
+      return <div>My Component</div>;
+    }
+  });
+  React.render(<div>
+    <MyComponent />
+    <MyComponent />
+    <MyComponent />
+  </div>, document.body);
+</script>
+</body>
+</html>
+```
