@@ -174,6 +174,7 @@ var HelloWorld = React.createClass({
 
 React.render(React.createElement(HelloWorld, null), document.body);
 ```
+
 index.html
 ```html
 <!DOCTYPE html>
@@ -244,6 +245,60 @@ index.html
     <MyComponent text="Goodbye">This is a goodbye.</MyComponent>
   </div>, document.body);
 </script>
+</body>
+</html>
+```
+
+### HandlingEvents
+
+js/note.js
+```javascript
+var Note = React.createClass({
+  edit: function () {
+    alert('editing note');
+  },
+  remove: function () {
+    alert('removeing note');
+  },
+  render: function () {
+    return (
+      <div className="note">
+        <p>{this.props.children}</p>
+        <span>
+          <button onClick={this.edit} className="btn btn-primary glyphicon glyphicon-pencil"/>
+          <button onClick={this.remove} className="btn btn-danger glyphicon glyphicon-trash"/>
+        </span>
+      </div>
+    );
+  }
+});
+React.render(<Note>Hello World</Note>, document.body);
+```
+
+index.html
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- jQuery, jQuery.ui -->
+  <link href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css" rel="stylesheet" type="text/css" />
+  <script src="https://code.jquery.com/jquery.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+
+  <!-- Bootstrap -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+  <!-- React -->
+  <script src="https://fb.me/react-0.14.3.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!--Custom Styles -->
+  <link href="css/style.css" rel="stylesheet" type="text/css" />
+  <title>React Bulletin Board</title>
+</head>
+<body>
+<script src="js/note.js" type="text/babel"></script>
 </body>
 </html>
 ```
