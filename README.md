@@ -41,3 +41,46 @@ index.html
   </body>
 </html>
 ```
+
+### Introducing Babel
+
+**cdnjs**
+
+The best FOSS CDN for web related libraries to speed up your websites!
+```
+https://cdnjs.com/libraries/babel-core
+```
+
+**babel-core**
+
+A compiler for writing next generation JavaScript
+```
+https://unpkg.com/@babel/standalone/babel.min.js
+```
+
+index.html
+```
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://fb.me/react-0.14.3.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <title>My First React File</title>
+</head>
+<body>
+<script type="text/babel">
+  var HelloWorld = React.createClass({
+    render: function() {
+      return (
+        <div>
+          <h1>Hello world</h1>
+          <p>This is some test</p>
+        </div>
+      );
+    }
+  });
+  React.render(<HelloWorld />, document.body);
+</script>
+</body>
+</html>
+```
