@@ -896,3 +896,156 @@ index.html
 </body>
 </html>
 ```
+
+### Keys
+
+js/note.js
+```javascript
+var Note = React.createClass({
+  getInitialState: function() {
+    return {editing: false}
+  },
+  componentWillMount: function() {
+    this.style = {
+      right: this.radomBetween(0, window.innerWidth - 150) + 'px',
+      top: this.radomBetween(0, window.innerHeight - 150) + 'px',
+      transform: 'rotate(' + this.radomBetween(-15, 50) + 'deg)'
+    };
+  },
+  radomBetween: function(min, max) {
+    return (min + Math.ceil(Math.random() * max));
+  },
+  edit: function() {
+    this.setState({editing: true});
+  },
+  save: function() {
+    this.props.onChange(this.refs.newText.getDOMNode().value, this.props.index);
+    this.setState({editing: false});
+  },
+  remove: function() {
+    this.props.onRemove(this.props.index);
+  },
+  renderDisplay: function() {
+    return (
+      <div className="note" style={this.style}>
+        <p>{this.props.children}</p>
+        <span>
+          <button onClick={this.edit} className="btn btn-primary glyphicon glyphicon-pencil"/>
+          <button onClick={this.remove} className="btn btn-danger glyphicon glyphicon-trash"/>
+        </span>
+      </div>
+    );
+  },
+  renderForm: function() {
+    return (
+      <div className="note" style={this.style}>
+        <textarea ref="newText" defaultValue={this.props.children} className="form-control"></textarea>
+        <button onClick={this.save} className="btn btn-success btn-sm glyphicon glyphicon-floppy-disk"/>
+      </div>
+    );
+  },
+  render: function() {
+    return this.state.editing ? this.renderForm() : this.renderDisplay();
+  }
+});
+
+var Board = React.createClass({
+  propTypes: {
+    count: function(props, propName) {
+      if (typeof props[propName] !== "number") {
+        return new Error("The count property must be a number");
+      }
+      if (props[propName] > 100) {
+        return new Error("Creating " + props[propName] + " notes is ridiculous");
+      }
+    }
+  },
+  getInitialState: function() {
+    return {
+      notes: []
+    }
+  },
+  nextId: function() {
+    this.uniqueId = this.uniqueId || 0;
+    this.uniqueId++;
+  },
+  add: function(text) {
+    var arr = this.state.notes;
+    arr.push({
+      id: this.nextId(),
+      note: text
+    });
+    this.setState({notes: arr});
+  },
+  update: function(newText, i) {
+    var arr = this.state.notes;
+    arr[i].note = newText;
+    this.setState({notes: arr});
+  },
+  remove: function(i) {
+    var arr = this.state.notes;
+    arr.splice(i, 1);
+    this.setState({notes: arr});
+  },
+  eachNote: function(note, i) {
+    return (
+      <Note key={note.id}
+            index={i}
+            onChange={this.update}
+            onRemove={this.remove}
+      >{note.note}</Note>
+    );
+  },
+  render: function() {
+    return (<div className="board">
+        {this.state.notes.map(this.eachNote)}
+        <button className="btn btn-sm btn-success glyphicon glyphicon-plus"
+                onClick={this.add.bind(null, "New Note")}/>
+      </div>
+    );
+  }
+});
+React.render(<Board count={10}/>, document.body);
+```
+
+css/style.css
+```css
+div.note {
+  height: 150px;
+  width: 150px;
+  background-color: yellow;
+  margin: 2px 0;
+  position: absolute;
+  cursor: -webkit-grab;
+  -webkit-box-shadow: 5px 5px 15px 0 rgba(0, 0, 0, .2);
+  box-shadow: 5px 5px 15px 0 rgba(0, 0, 0, .2);
+}
+```
+
+index.html
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- jQuery, jQuery.ui -->
+  <link href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css" rel="stylesheet" type="text/css" />
+  <script src="https://code.jquery.com/jquery.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+
+  <!-- Bootstrap -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+  <!-- React -->
+  <script src="https://fb.me/react-0.14.3.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!--Custom Styles -->
+  <link href="css/style.css" rel="stylesheet" type="text/css" />
+  <title>React Bulletin Board</title>
+</head>
+<body>
+<script src="js/note.js" type="text/babel"></script>
+</body>
+</html>
+```
