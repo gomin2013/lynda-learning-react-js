@@ -1135,3 +1135,52 @@ index.html
 </body>
 </html>
 ```
+
+### Updating Components
+
+index.html
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Component Lifecycle</title>
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link href="css/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<script type="text/babel">
+  class Box extends React.Component {
+    static defaultProps = {
+      colorIndex: -1
+    };
+
+    constructor(props) {
+      super(props);
+
+      this.state = {
+        backgroundColor: "Blue"
+      };
+
+      this.setNextColor = this.setNextColor.bind(this);
+    }
+
+    setNextColor() {
+      var colors = this.props.colors.split(', ');
+      this.props.colorIndex = (this.props.colorIndex + 1) % colors.length;
+      this.setState({ backgroundColor: colors[this.props.colorIndex] });
+    }
+
+    render() {
+      return (
+        <div style={this.state} onClick={this.setNextColor}>{this.state.backgroundColor}</div>
+      );
+    }
+  }
+
+  ReactDOM.render(<Box colors="Red, DarkMagenta, Salmon, Chartreuse, Blue" />, document.body);
+</script>
+</body>
+</html>
+```

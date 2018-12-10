@@ -1,0 +1,17 @@
+div {
+  align-items: center;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  font-size: 1em;
+  font-weight: normal;
+  height: 200px;
+  justify-content: center;
+  text-shadow: 0 0 15px #000000;
+  width: 200px;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
