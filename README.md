@@ -1049,3 +1049,52 @@ index.html
 </body>
 </html>
 ```
+
+## 05 Component Life Cycle
+### Mounting
+
+css/style.css
+```css
+div {
+  background-color: blue;
+  height: 200px;
+  width: 200px;
+}
+```
+
+index.html
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Component Lifecycle</title>
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link href="css/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<script type="text/babel">
+  class Box extends React.Component {
+    componentWillMount() {
+      alert("component is about to mount");
+    }
+
+    componentDidMount() {
+      alert('component has mounted');
+    }
+
+    handleClick() {
+      ReactDOM.unmountComponentAtNode(document.body);
+      alert('component is unmounted');
+    }
+
+    render() {
+      return <div onClick={this.handleClick}></div>;
+    }
+  }
+  ReactDOM.render(<Box />, document.body);
+</script>
+</body>
+</html>
+```

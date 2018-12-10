@@ -1,24 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <!-- jQuery, jQuery.ui -->
-  <link href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css" rel="stylesheet" type="text/css" />
-  <script src="https://code.jquery.com/jquery.min.js"></script>
-  <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
-
-  <!-- Bootstrap -->
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-
-  <!-- React -->
-  <script src="https://fb.me/react-0.14.3.min.js"></script>
+  <title>Component Lifecycle</title>
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-  <!--Custom Styles -->
   <link href="css/style.css" rel="stylesheet" type="text/css" />
-  <title>React Bulletin Board</title>
 </head>
 <body>
-<script src="js/note.js" type="text/babel"></script>
+<script type="text/babel">
+  class Box extends React.Component {
+    componentWillMount() {
+      alert("component is about to mount");
+    }
+
+    componentDidMount() {
+      alert('component has mounted');
+    }
+
+    handleClick() {
+      ReactDOM.unmountComponentAtNode(document.body);
+      alert('component is unmounted');
+    }
+
+    render() {
+      return <div onClick={this.handleClick}></div>;
+    }
+  }
+  ReactDOM.render(<Box />, document.body);
+</script>
 </body>
 </html>
