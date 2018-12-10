@@ -1098,3 +1098,40 @@ index.html
 </body>
 </html>
 ```
+
+### Setting Props
+
+index.html
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Component Lifecycle</title>
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+<script type="text/babel">
+  class Box extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        backgroundColor: "red",
+        height: 200,
+        width: 200
+      };
+    }
+
+    render() {
+      return (
+        <div style={this.state}></div>
+      );
+    }
+  }
+
+  ReactDOM.render(<Box />, document.body);
+</script>
+</body>
+</html>
+```

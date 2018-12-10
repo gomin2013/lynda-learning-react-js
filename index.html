@@ -5,28 +5,26 @@
   <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <link href="css/style.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <script type="text/babel">
   class Box extends React.Component {
-    componentWillMount() {
-      alert("component is about to mount");
-    }
-
-    componentDidMount() {
-      alert('component has mounted');
-    }
-
-    handleClick() {
-      ReactDOM.unmountComponentAtNode(document.body);
-      alert('component is unmounted');
+    constructor(props) {
+      super(props);
+      this.state = {
+        backgroundColor: "red",
+        height: 200,
+        width: 200
+      };
     }
 
     render() {
-      return <div onClick={this.handleClick}></div>;
+      return (
+        <div style={this.state}></div>
+      );
     }
   }
+
   ReactDOM.render(<Box />, document.body);
 </script>
 </body>
