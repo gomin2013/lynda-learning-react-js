@@ -1321,3 +1321,277 @@ var Board = React.createClass({
 
 React.render(<Board count={50}/>, document.getElementById('react-container'));
 ```
+
+### Convert to webpack + Coffeescript + SCSS + Pug.
+
+Files and directories.
+```
+lynda-learning-react-js
+  ├── package.json
+  ├── postcss.config.js
+  ├── webpack.config.js
+  └── src
+      ├── components
+      │   ├── Board.coffee
+      │   └── Note.coffee
+      ├── index.coffee
+      ├── index.pug
+      └── stylesheets
+          ├── fonts.scss
+          └── style.scss
+```
+
+package.json
+```json
+{
+  "name": "lynda-learning-react",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "prestart": "webpack",
+    "start": "./node_modules/.bin/webpack-dev-server"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
+    "autoprefixer": "^9.4.7",
+    "babel-loader": "^8.0.5",
+    "bootstrap": "^4.3.1",
+    "coffee-loader": "^0.9.0",
+    "coffeescript": "^2.3.2",
+    "css-loader": "^2.1.0",
+    "cssnano": "^4.1.8",
+    "html-webpack-plugin": "^3.2.0",
+    "node-sass": "^4.11.0",
+    "postcss-loader": "^3.0.0",
+    "pug": "^2.0.3",
+    "pug-loader": "^2.4.0",
+    "react-dom-factories": "^1.0.2",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.2.3",
+    "webpack-dev-server": "^3.2.1"
+  },
+  "dependencies": {
+    "jquery": "^3.3.1",
+    "jquery-ui": "^1.12.1",
+    "popper.js": "^1.14.7",
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4",
+    "react-icons": "^3.5.0"
+  }
+}
+```
+
+postcss.config.js
+```javascript
+module.exports = {
+  plugins: {
+    'autoprefixer': {},
+    'cssnano': {}
+  }
+};
+```
+
+webpack.config.js
+```javascript
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+module.exports = {
+  mode: "development",
+  entry: './src/index.coffee',
+  output: {
+    path: path.resolve(__dirname, 'docs/assets'),
+    publicPath: '/assets/',
+    filename: 'bundle.js'
+  },
+  devServer: {
+    inline: true,
+    contentBase: './docs',
+    port: 3000,
+    https: true,
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    }
+  },
+  module: {
+    rules: [{
+      test: /\.pug$/,
+      use: ['pug-loader']
+    },{
+      test: /\.coffee$/,
+      use: [
+        {
+          loader: 'coffee-loader',
+          options: {
+            transpile: {
+              presets: ['@babel/preset-env']
+            }
+          }
+        }
+      ]
+    },{
+      test: /\.scss$/,
+      use: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader']
+    }]
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, 'src/index.pug'),
+      filename: path.resolve(__dirname, 'docs/index.html')
+    })
+  ]
+};
+```
+
+src/components/Board.coffee
+```coffeescript
+import {Component, createElement as ele} from 'react'
+import {div, button} from 'react-dom-factories'
+import {Note} from './Note.coffee'
+import {FaPlus} from 'react-icons/fa'
+import $ from 'jquery'
+
+export class Board extends Component
+
+  constructor: (props) ->
+    super(props)
+    this.state = {
+      notes: []
+    }
+
+    this.updateNote = this.updateNote.bind(this)
+    this.removeNote = this.removeNote.bind(this)
+
+  nextId: ->
+    this.uniqueId ||= 0
+    this.uniqueId++
+
+  addNote: (text) ->
+    this.state.notes.push({ id: this.nextId(), note: text.substring(0, 40) })
+    this.setState { notes: this.state.notes }
+
+  updateNote: (newText, i) ->
+    this.state.notes[i].note = newText
+    this.setState { notes: this.state.notes }
+
+  removeNote: (i) ->
+    this.state.notes.splice(i, 1)
+    this.setState { notes: this.state.notes }
+
+  componentWillMount: ->
+    self = this
+
+    if this.props.count
+      $.getJSON "https://baconipsum.com/api/?type=all-meat&sentences=#{this.props.count}&start-with-lorem=1&callback=?"
+        .done (results) ->
+          results[0].split('. ').forEach (note) ->
+            self.addNote(note)
+
+  render: ->
+    self = this
+
+    div { className: 'board' },
+      this.state.notes.map (note, i) ->
+        ele Note, { key: note.id, index: i, onChange: self.updateNote, onRemove: self.removeNote },
+          note.note
+      button { className: 'btn btn-sm btn-success', onClick: this.addNote.bind(this, 'New Note') },
+        FaPlus null
+
+Board.propTypes =
+  count: (props, propName) ->
+    if typeof props[propName] != 'number'
+      new Error('The count property must be a number.')
+    if props[propName] > 100
+      new Error("Creating #{props[propName]} notes is ridiculous.")
+```
+
+src/components/Note.coffee
+```coffeescript
+import {Component} from 'react'
+import {findDOMNode} from 'react-dom'
+import {div, p, span, textarea, button} from 'react-dom-factories'
+import {FaPen, FaTrashAlt} from 'react-icons/fa'
+import {IoIosSave} from 'react-icons/io'
+import $ from 'jquery'
+
+randomBetween = (min, max) ->
+  min + Math.ceil(Math.random() * max)
+
+export class Note extends Component
+
+  constructor: (props) ->
+    super(props)
+    this.state = {
+      editing: false
+    }
+
+    this.edit = this.edit.bind(this)
+    this.remove = this.remove.bind(this)
+
+  componentWillMount: ->
+    this.style = {
+      right: randomBetween(0, window.innerWidth - 150) + 'px'
+      top: randomBetween(0, window.innerHeight - 150) + 'px'
+      transform: 'rotate(' + randomBetween(-15, 50) + 'deg)'
+    }
+
+  componentDidMount: ->
+    $(findDOMNode(this)).draggable({ addClasses: false })
+
+  edit: ->
+    this.setState { editing: true }
+
+  saveNote: ->
+    this.props.onChange($(findDOMNode(this.refs.newText)).val(), this.props.index)
+    this.setState { editing: false }
+
+  remove: ->
+    this.props.onRemove(this.props.index)
+
+  renderDisplay: ->
+    div { className: 'note', style: this.style },
+      p null, this.props.children
+      span null,
+        button { className: 'btn btn-primary', onClick: this.edit },
+          FaPen null
+        button { className: 'btn btn-danger', onClick: this.remove },
+          FaTrashAlt null
+
+  renderForm: ->
+    div { className: 'note', style: this.style },
+      textarea { className: 'form-control', ref: 'newText', defaultValue: this.props.children }
+      button { className: 'btn btn-success btn-sm', onClick: this.saveNote.bind(this) },
+        IoIosSave null
+
+  render: ->
+    if this.state.editing then this.renderForm()  else this.renderDisplay()
+```
+
+src/index.coffee
+```coffeescript
+import {createElement as ele} from 'react'
+import {render} from 'react-dom'
+import {Board} from './components/Board.coffee'
+import './stylesheets/style.scss'
+import 'jquery-ui/ui/widgets/draggable'
+
+render ele(Board, { count: 20 }), document.getElementById('page')
+```
+
+src/index.pug
+```jade
+doctype html
+head
+  meta(charset='UTF-8')
+  title React Bulletin Board
+#page
+```
+
+Please find [`fonts.scss`](../03b5b0ac99ab91dbd08f71d0f691e92119ac7f75/src/stylesheets/fonts.scss) and [`style.scss`](../03b5b0ac99ab91dbd08f71d0f691e92119ac7f75/src/stylesheets/style.scss)
+
+![Convert to webpack + Coffeescript + SCSS + Pug.](/README/05-05-converted-to-webpack-coffeescript-scss-pug.gif)
